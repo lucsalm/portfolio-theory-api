@@ -15,11 +15,9 @@ class Service:
 
         intial_date = daily_yields.index[0]
 
-        portfolio = self.portfolio_response(investment_names, optimizetion, intial_date, quotes, daily_yields)
+        portfolio_response = self.portfolio_response(investment_names, optimizetion, intial_date, quotes, daily_yields)
 
-        response_body = self.final_response(portfolio)
-
-        return response_body
+        return portfolio_response
 
     def optimize(self, investments, priorize):
         self.prepare_functions(investments, priorize)
@@ -99,6 +97,7 @@ class Service:
         return response
 
     def portfolio_response(self, investment_names, optimization, initialDate, quotes, daily_yields):
+
         optimized, daily_yield, risk = optimization
         if bool(optimized.success):
             quotes.index = pd.to_datetime(quotes.index).strftime('%d/%m/%Y')
@@ -111,5 +110,5 @@ class Service:
                 'quotes': list(quotes.reset_index().to_dict('index').values()),
                 'dailyYields': list(daily_yields.reset_index().to_dict('index').values())
             }
-            return self.percent_response(optimized.x, investment_names, response)
+            return self.final_response(self.percent_response(optimized.x, investment_names, response))
         return None

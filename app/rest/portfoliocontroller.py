@@ -17,4 +17,6 @@ class Controller(Resource):
         investment_names = investment_names.split(",")
 
         response_body = Service().find_best_portfolio(investment_names, years, priorize)
+
+        Validator().validate_return(response_body)
         return jsonify(response_body)
